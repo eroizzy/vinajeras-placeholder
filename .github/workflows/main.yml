@@ -52,10 +52,25 @@ jobs:
         dockerfiles: ./Dockerfile
 
     - name: Buildah Build ${{ env.IMAGE_NAME }}
+      id: build-image
       # You may pin to the exact commit or the version.
       # uses: redhat-actions/buildah-build@b13805753a7ac93d18d14b22f6ebdf8499a3a95e
       uses: redhat-actions/buildah-build@v2.9
       with:
         image: ${{ env.IMAGE_NAME }}
         dockerfiles: ./Dockerfile
+    - name: Log in to the GitHub Container registry
+      uses: redhat-actions/podman-login@v1
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Push to GitHub Container Repository
+      id: push-to-ghcr
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ steps.build-image.outputs.image }}
+        tags: ${{ steps.build-image.outputs.tags }}
+        registry: ${{ env.REGISTRY }}
 
