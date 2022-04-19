@@ -39,7 +39,7 @@ jobs:
 
     env:
       IMAGE_NAME: vph
-      REGISTRY: ghcr.io/eroizzy/
+      REGISTRY: ghcr.io/eroizzy
 
     steps:
     - uses: actions/checkout@v3
