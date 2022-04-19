@@ -30,3 +30,27 @@ jobs:
         with:
           configPath: './lighthouserc.json'
           temporaryPublicStorage: true
+  build-container:
+    needs: lighthouse-test
+    
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Buildah Build nginx
+      # You may pin to the exact commit or the version.
+      # uses: redhat-actions/buildah-build@b13805753a7ac93d18d14b22f6ebdf8499a3a95e
+      uses: redhat-actions/buildah-build@v2.9
+      with:
+        image: nginx
+        dockerfiles: ./nginx/Dockerfile
+
+    - name: Buildah Build vph
+      # You may pin to the exact commit or the version.
+      # uses: redhat-actions/buildah-build@b13805753a7ac93d18d14b22f6ebdf8499a3a95e
+      uses: redhat-actions/buildah-build@v2.9
+      with:
+        image: vph
+        dockerfiles: ./Dockerfile
+
